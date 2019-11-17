@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket demo</title>
+    <style type="text/css">
+        body {
+            font-family: "Courier New", sans-serif;
+        }
+    </style>
+</head>
+<body>
+<div class="">
+    state: <span class="state"></span>
+</div>
+<div class="">
+    uid: <span class="uid"></span>
+</div>
+<div class="">
+    debug: <span class="debug"></span>
+</div>
+<script>
+    let debug = document.querySelector('.debug'),
+        state = document.querySelector('.state'),
+        uid = Math.floor((Math.random() * 10000) + 1);
+    websocket = new WebSocket("ws://127.0.0.1:6789/");
+    websocket.onopen = function (event) {
+        console.log("WebSocket is open now.");
+        let data = JSON.stringify({action: 'register', 'uid': uid})
+        console.log(data);
+        websocket.send(data);
+    };
+
+    websocket.onmessage = function (event) {
+        let data = JSON.parse(event.data);
+        console.log("data", data);
+        switch (data.type) {
+            case 'state':
+                state.textContent = data.value;
+                break;
+            default:
+                console.log("unsupported event", data);
+                debug.textContent = event.data
+        }
+    };
+</script>
+</body>
+</html>
