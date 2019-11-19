@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import asyncio
+import argparse
 import logging.config
 import random
 
@@ -11,11 +12,12 @@ logger = logging.getLogger(__name__)
 redis_channel = 'ping-users'
 
 
-async def main(redis_channel):
+async def main(redis_channel, uids):
     pub = await aioredis.create_redis('redis://localhost')
     data = {
         'type': 'state',
-        'value': "{}".format(int(random.random() * 10))
+        'value': "{}".format(int(random.random() * 10)),
+        'uids': uids,
     }
     res = await pub.publish_json(redis_channel, data)
     logger.debug(f'send to: {res} subscribers')
@@ -23,4 +25,11 @@ async def main(redis_channel):
 
 
 if __name__ == '__main__':
-    asyncio.run(main(redis_channel))
+    parser = argparse.ArgumentParser(description='Send ping to users.')
+    parser.add_argument('uids', metavar='N', type=int, nargs='+',
+                        help='uids for ping')
+
+    args = parser.parse_args()
+    uids = args.uids
+    asyncio.run(main(redis_channel, uids))
+

@@ -57,8 +57,6 @@ async def redis_main():
     res = await sub.subscribe(redis_channel)
     ch1 = res[0]
     tsk = await reader(ch1)
-
-    # TODO unsubscribe, close
     await sub.unsubscribe('chan:1')
     sub.close()
 

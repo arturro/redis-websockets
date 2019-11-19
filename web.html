@@ -19,9 +19,11 @@
     debug: <span class="debug"></span>
 </div>
 <script>
-    let debug = document.querySelector('.debug'),
-        state = document.querySelector('.state'),
-        uid = Math.floor((Math.random() * 10000) + 1);
+    let element_debug = document.querySelector('.debug'),
+        element_state = document.querySelector('.state'),
+        element_uid = document.querySelector('.uid'),
+        uid = Math.floor((Math.random() * 3) + 1);
+    element_uid.textContent = uid;
     websocket = new WebSocket("ws://127.0.0.1:6789/");
     websocket.onopen = function (event) {
         console.log("WebSocket is open now.");
@@ -35,11 +37,11 @@
         console.log("data", data);
         switch (data.type) {
             case 'state':
-                state.textContent = data.value;
+                element_state.textContent = data.value;
                 break;
             default:
                 console.log("unsupported event", data);
-                debug.textContent = event.data
+                element_debug.textContent = event.data
         }
     };
 </script>

@@ -11,6 +11,7 @@ class MapUser:
         self.map_uid_ws = {}
 
     def register_user(self, uid, ws):
+        #  TODO swap uid<>ws and uid=0?
         self.map_ws_uid[ws] = uid
         current = self.map_uid_ws.setdefault(uid, set())
         current.add(ws)
@@ -29,8 +30,13 @@ class MapUser:
         if uid:
             self.unregister_user(uid, ws)
 
-    def get_ws_set_by_uid(self, uids: list):
+    def get_ws_set_by_uid(self, uids=[]):
         all_ws = set()
-        for uid in uids:
-            all_ws.update(self.map_uid_ws.get(uid))
+        if uids:
+            for uid in uids:
+                ws = self.map_uid_ws.get(uid)
+                if ws:
+                    all_ws.update(ws)
+        else:
+            all_ws = set(self.map_ws_uid.keys())
         return all_ws
