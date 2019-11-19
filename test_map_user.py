@@ -94,13 +94,6 @@ class TestMapUser(unittest.TestCase):
         }
         map_user.unregister_user_by_ws(ws_3)
 
-        print('-------------------')
-        pprint(map_uid_ws)
-        pprint(map_user.map_uid_ws)
-        pprint(map_ws_uid)
-        pprint(map_user.map_ws_uid)
-        print('-------------------')
-
         self.assertEqual(map_user.map_uid_ws, map_uid_ws, 'check map_uid_ws')
         self.assertEqual(map_user.map_ws_uid, map_ws_uid, 'check map_ws_uid')
 
