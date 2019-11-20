@@ -1,3 +1,5 @@
+from pprint import pprint
+
 class MapUser:
     """
         add description
@@ -18,8 +20,14 @@ class MapUser:
         self.map_uid_ws[uid] = current
 
     def unregister_user(self, uid, ws):
+        print('unregister_user')
         self.map_ws_uid.pop(ws, None)
+        print(f'uid: {uid}')
+        print(f'ws: {ws}')
+        pprint(self.map_ws_uid)
+
         current = self.map_uid_ws.get(uid)
+        print(f'current {current}')
         if current:
             current.remove(ws)
             if not current:

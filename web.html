@@ -13,7 +13,7 @@
     state: <span class="state"></span>
 </div>
 <div class="">
-    uid: <span class="uid"></span>
+    uid: <input type="text" value="" name="uid" id="uid"/> <input type="submit" value="register" id="register">
 </div>
 <div class="">
     debug: <span class="debug"></span>
@@ -21,16 +21,26 @@
 <script>
     let element_debug = document.querySelector('.debug'),
         element_state = document.querySelector('.state'),
-        element_uid = document.querySelector('.uid'),
-        uid = Math.floor((Math.random() * 3) + 1);
-    element_uid.textContent = uid;
+        element_uid = document.getElementById("uid"),
+        element_register = document.getElementById("register"),
+        uid = Math.floor((Math.random() * 5) + 1);
+    element_uid.value = uid;
     websocket = new WebSocket("ws://127.0.0.1:6789/");
     websocket.onopen = function (event) {
         console.log("WebSocket is open now.");
+        register_uid();
+    };
+
+    element_register.onclick = function () {
+        register_uid();
+    };
+
+    function register_uid() {
+        uid = element_uid.value;
         let data = JSON.stringify({action: 'register', 'uid': uid})
         console.log(data);
         websocket.send(data);
-    };
+    }
 
     websocket.onmessage = function (event) {
         let data = JSON.parse(event.data);
@@ -41,7 +51,7 @@
                 break;
             default:
                 console.log("unsupported event", data);
-                element_debug.textContent = event.data
+                element_debug.textContent = event.data;
         }
     };
 </script>

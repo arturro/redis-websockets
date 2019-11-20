@@ -18,17 +18,29 @@ def register(websocket, uid):
     map_user.register_user(uid, websocket)
 
 
-def unregister(websocket):
-    map_user.unregister_user_by_ws(websocket)
+def unregister(websocket, uid=0):
+    if uid:
+        map_user.unregister_user(uid, websocket)
+    else:
+        map_user.unregister_user_by_ws(websocket)
 
 
 def dispatch_ws_action(websocket, data):
-    logging.error(f'event: {data}')
+    logging.info(f'event: {data}')
     action = data.get('action')
     if action == 'register':
         uid = data.get('uid')
         if uid:
+            from pprint import pprint
+            print('-----------------')
+            unregister(websocket, uid)  # only for test
+            pprint(map_user.map_uid_ws)
+            pprint(map_user.map_ws_uid)
+            print('-----------------')
             register(websocket, uid)
+            pprint(map_user.map_uid_ws)
+            pprint(map_user.map_ws_uid)
+            print('-----------------')
         else:
             logger.debug(f'unknown uid for {data}')
     else:
