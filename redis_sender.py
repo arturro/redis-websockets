@@ -16,7 +16,7 @@ async def main(redis_channel, uids):
     pub = await aioredis.create_redis('redis://localhost')
     data = {
         'type': 'state',
-        'value': "{}".format(int(random.random() * 10)),
+        'value': '{}'.format(int(random.random() * 10)),
         'uids': uids,
     }
     res = await pub.publish_json(redis_channel, data)
@@ -32,4 +32,3 @@ if __name__ == '__main__':
     args = parser.parse_args()
     uids = args.uids
     asyncio.run(main(redis_channel, uids))
-
