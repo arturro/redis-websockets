@@ -30,7 +30,7 @@ class MapUser:
         if uid:
             self.unregister_user(uid, ws)
 
-    def get_ws_set_by_uid(self, uids=[]):
+    def get_ws_get_by_uid(self, uids=[]):
         all_ws = set()
         if uids:
             for uid in uids:

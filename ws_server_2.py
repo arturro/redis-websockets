@@ -47,9 +47,9 @@ async def browser_server(websocket, path):
 
 async def ping_users(msg):
     data = {'type': 'state', 'value': msg.get('value')}
-    logger.debug(map_user.get_ws_set_by_uid(msg.get('uids')))
+    logger.debug(map_user.get_ws_get_by_uid(msg.get('uids')))
 
-    for websocket in map_user.get_ws_set_by_uid(msg.get('uids')):
+    for websocket in map_user.get_ws_get_by_uid(msg.get('uids')):
         logger.debug(f'prepare to send {websocket}')
         # await asyncio.sleep(1)
         await websocket.send(json.dumps(data))
