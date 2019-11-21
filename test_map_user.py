@@ -107,12 +107,44 @@ class TestMapUser(unittest.TestCase):
         uid_1 = random.randint(1, 100)
         ws_id_1 = random.randint(1, 100)
         ws_1 = f'websocket_{ws_id_1}_for_{uid_1}'
-        map_uid_ws = {uid_1: set((ws_1,))}
-        map_ws_uid = {ws_1: uid_1}
         map_user.register_user(uid_1, ws_1)
 
         ws = map_user.get_ws_get_by_uid([uid_1])
         self.assertEqual(ws, set([ws_1]))
+
+    def test_unregister_user(self):
+        map_user = self.map_user
+        uid_1 = random.randint(1, 100)
+        ws_id_1 = random.randint(1, 100)
+        ws_1 = f'websocket_{ws_id_1}_for_{uid_1}'
+        map_uid_ws = {uid_1: set((ws_1,))}
+        map_ws_uid = {ws_1: uid_1}
+        map_user.register_user(uid_1, ws_1)
+        self.assertEqual(map_user.map_uid_ws, map_uid_ws, 'check map_uid_ws')
+        self.assertEqual(map_user.map_ws_uid, map_ws_uid, 'check map_ws_uid')
+
+        ws_id_2 = random.randint(1, 100)
+        ws_2 = f'websocket_{ws_id_2}_for_{uid_1}'
+        map_user.register_user(uid_1, ws_2)
+        map_uid_ws = {
+            uid_1: set((ws_1, ws_2,)),
+        }
+        map_ws_uid = {
+            ws_1: uid_1,
+            ws_2: uid_1,
+        }
+        self.assertEqual(map_user.map_uid_ws, map_uid_ws, 'check map_uid_ws')
+        self.assertEqual(map_user.map_ws_uid, map_ws_uid, 'check map_ws_uid')
+
+        map_user.unregister_user(uid_1, ws_1)
+        map_uid_ws = {
+            uid_1: set((ws_2,)),
+        }
+        map_ws_uid = {
+            ws_2: uid_1,
+        }
+        self.assertEqual(map_user.map_uid_ws, map_uid_ws, 'check map_uid_ws')
+        self.assertEqual(map_user.map_ws_uid, map_ws_uid, 'check map_ws_uid')
 
 
 if __name__ == '__main__':

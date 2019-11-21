@@ -1,4 +1,4 @@
-from pprint import pprint
+from pprint import pprint, pformat
 
 class MapUser:
     """
@@ -14,31 +14,29 @@ class MapUser:
 
     def register_user(self, uid, ws):
         #  TODO swap uid<>ws and uid=0?
+        uid = int(uid)
         self.map_ws_uid[ws] = uid
         current = self.map_uid_ws.setdefault(uid, set())
         current.add(ws)
         self.map_uid_ws[uid] = current
 
     def unregister_user(self, uid, ws):
-        print('unregister_user')
+        uid = int(uid)  # TODO: add try and custom exception
         self.map_ws_uid.pop(ws, None)
-        print(f'uid: {uid}')
-        print(f'ws: {ws}')
-        pprint(self.map_ws_uid)
-
-        current = self.map_uid_ws.get(uid)
-        print(f'current {current}')
-        if current:
-            current.remove(ws)
-            if not current:
+        user_websockets = self.map_uid_ws.get(uid)
+        if user_websockets:
+            user_websockets.remove(ws)
+            if not user_websockets:
                 self.map_uid_ws.pop(uid, None)
 
     def unregister_user_by_ws(self, ws):
+        #  TODO swap uid<>ws and uid=0?
         uid = self.map_ws_uid.get(ws)
         if uid:
             self.unregister_user(uid, ws)
 
     def get_ws_get_by_uid(self, uids=[]):
+        # TODO: add map to int and try and custom exception
         all_ws = set()
         if uids:
             for uid in uids:

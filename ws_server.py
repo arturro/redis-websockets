@@ -18,11 +18,8 @@ def register(websocket, uid):
     map_user.register_user(uid, websocket)
 
 
-def unregister(websocket, uid=0):
-    if uid:
-        map_user.unregister_user(uid, websocket)
-    else:
-        map_user.unregister_user_by_ws(websocket)
+def unregister(websocket):
+    map_user.unregister_user_by_ws(websocket)
 
 
 def dispatch_ws_action(websocket, data):
@@ -31,16 +28,8 @@ def dispatch_ws_action(websocket, data):
     if action == 'register':
         uid = data.get('uid')
         if uid:
-            from pprint import pprint
-            print('-----------------')
-            unregister(websocket, uid)  # only for test
-            pprint(map_user.map_uid_ws)
-            pprint(map_user.map_ws_uid)
-            print('-----------------')
+            unregister(websocket)  # only for test with change UID
             register(websocket, uid)
-            pprint(map_user.map_uid_ws)
-            pprint(map_user.map_ws_uid)
-            print('-----------------')
         else:
             logger.debug(f'unknown uid for {data}')
     else:
@@ -58,9 +47,13 @@ async def browser_server(websocket, path):
 
 
 async def ping_users(msg):
-    data = {'type': 'state', 'value': msg.get('value')}
-    logger.debug(map_user.get_ws_get_by_uid(msg.get('uids')))
-
+    msg_type = msg.get('type')
+    if msg_type == 'ping':
+        data = {'type': 'ping'}
+    elif msg_type == msg_type:
+        data = {'type': 'state', 'value': msg.get('value')}
+    else:
+        logger.error(f'unsupported type for msg {msg}')
     for websocket in map_user.get_ws_get_by_uid(msg.get('uids')):
         logger.debug(f'prepare to send {websocket}')
         await websocket.send(json.dumps(data))

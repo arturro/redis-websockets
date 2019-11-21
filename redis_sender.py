@@ -14,9 +14,15 @@ redis_channel = 'ping-users'
 
 async def main(redis_channel, uids):
     pub = await aioredis.create_redis('redis://localhost')
+    """
     data = {
         'type': 'state',
         'value': '{}'.format(int(random.random() * 10)),
+        'uids': uids,
+    }
+    """
+    data = {
+        'type': 'ping',
         'uids': uids,
     }
     res = await pub.publish_json(redis_channel, data)
