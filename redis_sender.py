@@ -32,7 +32,7 @@ async def main(redis_channel, uids):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Send ping to users.')
-    parser.add_argument('uids', metavar='N', type=int, nargs='+',
+    parser.add_argument('uids', metavar='N', type=str, nargs='+',
                         help='uids for ping')
 
     args = parser.parse_args()
