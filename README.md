@@ -29,7 +29,24 @@ On this page javascript generate a random UID and send it to server and display.
 ## Sending ping
 
 To send information use `pipenv run ./redis_sender.py UID1 UID2`
-This script generate json with a random value and list of users to whom the notification should be sent.
+
+This script generate:
+
+**new**
+
+Json with list of users to whom the notification should be sent.
+
+For example: 
+```
+{
+	"type": "ping",
+	"uids": [1, 2, 3]
+}
+```
+ 
+**old**
+
+Json with list of users to whom the notification should be sent and a random value.
 For example: 
 ```
 {
