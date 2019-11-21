@@ -54,7 +54,7 @@ async def ping_users(msg):
         data = {'type': 'state', 'value': msg.get('value')}
     else:
         logger.error(f'unsupported type for msg {msg}')
-    for websocket in map_user.get_ws_get_by_uid(msg.get('uids')):
+    for websocket in map_user.get_ws_by_uid(msg.get('uids')):
         logger.debug(f'prepare to send {websocket}')
         await websocket.send(json.dumps(data))
         logger.debug(f'send to {websocket}')

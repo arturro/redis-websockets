@@ -1,5 +1,10 @@
 from pprint import pprint, pformat
 
+import logging
+
+logger = logging.getLogger(__name__)
+
+
 class MapUser:
     """
         add description
@@ -21,6 +26,7 @@ class MapUser:
         self.map_uid_ws[uid] = current
 
     def unregister_user(self, uid, ws):
+        #  TODO swap uid<>ws and uid=0?
         uid = int(uid)  # TODO: add try and custom exception
         self.map_ws_uid.pop(ws, None)
         user_websockets = self.map_uid_ws.get(uid)
@@ -30,12 +36,24 @@ class MapUser:
                 self.map_uid_ws.pop(uid, None)
 
     def unregister_user_by_ws(self, ws):
-        #  TODO swap uid<>ws and uid=0?
         uid = self.map_ws_uid.get(ws)
         if uid:
             self.unregister_user(uid, ws)
 
-    def get_ws_get_by_uid(self, uids=[]):
+    # use this method instead unregister_user and unregister_user_by_ws
+    def unregister_user2(self, ws):
+        uid = self.map_ws_uid.get(ws)
+        if uid:
+            self.map_ws_uid.pop(ws, None)
+            user_websockets = self.map_uid_ws.get(uid)
+            if user_websockets:
+                user_websockets.remove(ws)
+                if not user_websockets:
+                    self.map_uid_ws.pop(uid, None)
+        else:
+            logger.info(f'no user for websocket: {ws}')
+
+    def get_ws_by_uid(self, uids=[]):
         # TODO: add map to int and try and custom exception
         all_ws = set()
         if uids:
