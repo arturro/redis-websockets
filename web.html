@@ -16,7 +16,7 @@
     uid: <input type="text" value="" name="uid" id="uid"/> <input type="submit" value="register" id="register">
 </div>
 <div class="">
-    debug: <span class="debug"></span>
+    debug: <pre class="debug"></pre>
 </div>
 <script>
     let element_debug = document.querySelector('.debug'),
@@ -45,13 +45,16 @@
     websocket.onmessage = function (event) {
         let data = JSON.parse(event.data);
         console.log("data", data);
+        element_debug.textContent = element_debug.textContent + event.data + "\n";
         switch (data.type) {
             case 'state':
                 element_state.textContent = data.value;
                 break;
+            case 'ping':
+                alert('ping: reload data...')
+                break;
             default:
                 console.log("unsupported event", data);
-                element_debug.textContent = event.data;
         }
     };
 </script>
